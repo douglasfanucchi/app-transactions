@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:5.7
+    ports:
+      - 3310:3006
+    volumes: 
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lumen
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - ./:/var/www/html
+    links:
+      - php
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 9000:9000
+volumes:
+  mysql:
