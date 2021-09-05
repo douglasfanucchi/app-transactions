@@ -17,7 +17,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./:/var/www/html
+      - ./src:/var/www/html
     links:
       - php
   php:
@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile: php.dockerfile
     volumes:
-      - ./:/var/www/html
+      - ./src:/var/www/html
     ports:
       - 9000:9000
 volumes:
