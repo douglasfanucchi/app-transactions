@@ -18,6 +18,6 @@ class IsPayerACustomerMiddleware
             );
         }
 
-        $next($request);
+        return $next($request);
     }
 }
