@@ -37,4 +37,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         $this->credits += $value;
     }
+
+    public function transactionAsPayee()
+    {
+        return $this->hasMany(Transaction::class, 'payee');
+    }
 }
