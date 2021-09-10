@@ -8,4 +8,9 @@ class UserCustomer extends User
     {
         $this->credits -= $value;
     }
+
+    public function transactionAsPayer()
+    {
+        return $this->belongsTo(Transaction::class, 'payer');
+    }
 }
