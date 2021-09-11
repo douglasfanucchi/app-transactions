@@ -24,4 +24,12 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class, 'payee', 'id');
     }
+
+    public function isValid(UserCustomer $payer, User $payee): bool
+    {
+        $value = $this->value;
+
+        return $payer->previous_credits - $value === $payer->credits
+                && $payee->previous_credits + $value === $payee->credits;
+    }
 }
