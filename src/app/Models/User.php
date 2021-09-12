@@ -42,4 +42,11 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return $this->hasMany(Transaction::class, 'payee');
     }
+
+    public function rollbackToTransaction(
+        Transaction $transaction
+    ) {
+        $this->credits = $transaction->payee_current_credits;
+        $this->previous_credits = $transaction->payee_previous_credits;
+    }
 }

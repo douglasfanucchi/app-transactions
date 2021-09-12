@@ -4,6 +4,8 @@ namespace App\Models;
 
 class UserCustomer extends User
 {
+    protected $table = 'users';
+
     public function pay(float $value)
     {
         $this->credits -= $value;
@@ -12,5 +14,18 @@ class UserCustomer extends User
     public function transactionAsPayer()
     {
         return $this->belongsTo(Transaction::class, 'payer');
+    }
+
+    public function rollbackToTransaction(
+        Transaction $transaction
+    ) {
+        $isCurrentUserPayee = $transaction->payee === $this->id;
+
+        if ($isCurrentUserPayee) {
+            return parent::rollbackToTransaction($transaction);
+        }
+
+        $this->credits = $transaction->payer_current_credits;
+        $this->previous_credits = $transaction->payer_previous_credits;
     }
 }
