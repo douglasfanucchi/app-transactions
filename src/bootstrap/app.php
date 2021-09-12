@@ -79,6 +79,7 @@ $app->configure('app');
 $app->routeMiddleware([
     'isPayerACustomer' => App\Http\Middleware\IsPayerACustomerMiddleware::class,
     'payerHasEnoughCredits' => App\Http\Middleware\PayerHasEnoughCreditsMiddleware::class,
+    'parseUsers' => App\Http\Middleware\ParseUsersFromRequest::class
 ]);
 
 /*
