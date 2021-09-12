@@ -32,4 +32,29 @@ class Transaction extends Model
         return $payer->previous_credits - $value === $payer->credits
                 && $payee->previous_credits + $value === $payee->credits;
     }
+
+    public function rollback(UserCustomer $payer, User $payee)
+    {
+        $payerLastValidTransaction = Transaction::where('status', 'success')
+                                        ->where(function ($query) use ($payer) {
+                                            $query->where('payee', $payer->id)
+                                                ->orWhere('payer', $payer->id);
+                                        })
+                                        ->orderByDesc('created_at')
+                                        ->first();
+
+        $payeeLastValidTransaction = Transaction::where('status', 'success')
+                                        ->where(function ($query) use ($payee) {
+                                            $query->where('payee', $payee->id)
+                                                ->orWhere('payer', $payee->id);
+                                        })
+                                        ->orderByDesc('created_at')
+                                        ->first();
+
+        $payer->rollbackToTransaction($payerLastValidTransaction);
+        $payee->rollbackToTransaction($payeeLastValidTransaction);
+
+        $payee->save();
+        $payer->save();
+    }
 }
