@@ -35,6 +35,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function receivePayment(float $value)
     {
+        $this->previous_credits = $this->credits;
         $this->credits += $value;
     }
 

@@ -18,6 +18,7 @@ class UserTest extends TestCase
 
         $payee->receivePayment($paymentValue);
 
+        $this->assertEqualsWithDelta($initialCredits, $payee->previous_credits, 0.0001);
         $this->assertEqualsWithDelta($initialCredits + $paymentValue, $payee->credits, 0.0001);
     }
 
@@ -30,6 +31,7 @@ class UserTest extends TestCase
 
         $payer->pay($paymentValue);
 
+        $this->assertEqualsWithDelta($initialCredits, $payer->previous_credits, 0.0001);
         $this->assertEqualsWithDelta($initialCredits - $paymentValue, $payer->credits, 0.0001);
     }
 

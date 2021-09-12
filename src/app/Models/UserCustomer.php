@@ -8,6 +8,7 @@ class UserCustomer extends User
 
     public function pay(float $value)
     {
+        $this->previous_credits = $this->credits;
         $this->credits -= $value;
     }
 
