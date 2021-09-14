@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Observers\TransactionObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 
 class Transaction extends Model
 {
@@ -36,8 +37,8 @@ class Transaction extends Model
     {
         $value = $this->value;
 
-        return abs(($payer->previous_credits - $value) - $payer->credits) < PHP_FLOAT_EPSILON
-                && abs(($payee->previous_credits + $value) - $payee->credits) < PHP_FLOAT_EPSILON;
+        return abs(($payer->previous_credits - $value) - $payer->credits) < 0.0001
+                && abs(($payee->previous_credits + $value) - $payee->credits) < 0.0001;
     }
 
     public function rollback(UserCustomer $payer, User $payee)
