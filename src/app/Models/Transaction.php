@@ -41,6 +41,13 @@ class Transaction extends Model
                 && abs(($payee->previous_credits + $value) - $payee->credits) < 0.0001;
     }
 
+    public function authorized()
+    {
+        $response = Http::get('https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6');
+
+        return $response->object()->message === 'Autorizado';
+    }
+
     public function rollback(UserCustomer $payer, User $payee)
     {
         $payerLastValidTransaction = Transaction::where('status', 'success')

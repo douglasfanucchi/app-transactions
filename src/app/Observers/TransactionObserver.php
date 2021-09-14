@@ -11,7 +11,7 @@ class TransactionObserver
         $payer = $transaction->payer()->first();
         $payee = $transaction->payee()->first();
 
-        if (!$transaction->isValid($payer, $payee)) {
+        if (!$transaction->isValid($payer, $payee) || !$transaction->authorized()) {
             $transaction->rollback($payer, $payee);
             $transaction->status = 'failed';
             $transaction->save();
