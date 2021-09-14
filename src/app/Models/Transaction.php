@@ -16,6 +16,12 @@ class Transaction extends Model
         'payer', 'payee', 'value'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+        Transaction::observe(TransactionObserver::class);
+    }
+
     public function payer()
     {
         return $this->belongsTo(UserCustomer::class, 'payer', 'id');
@@ -52,8 +58,19 @@ class Transaction extends Model
                                         ->orderByDesc('created_at')
                                         ->first();
 
-        $payer->rollbackToTransaction($payerLastValidTransaction);
-        $payee->rollbackToTransaction($payeeLastValidTransaction);
+        if ($payerLastValidTransaction === null) {
+            $payer->credits = $payer->previous_credits;
+            $payer->previous_credits = 0;
+        } else {
+            $payer->rollbackToTransaction($payerLastValidTransaction);
+        }
+
+        if ($payeeLastValidTransaction === null) {
+            $payee->credits = $payee->previous_credits;
+            $payee->previous_credits = 0;
+        } else {
+            $payee->rollbackToTransaction($payeeLastValidTransaction);
+        }
 
         $payee->save();
         $payer->save();
